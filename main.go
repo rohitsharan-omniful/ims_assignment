@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
-	appinit "github.com/omniful/api-gateway/init"
-	"github.com/omniful/api-gateway/router"
 	"github.com/omniful/go_commons/config"
 	"github.com/omniful/go_commons/http"
 	"github.com/omniful/go_commons/log"
 	"github.com/omniful/go_commons/shutdown"
 	"github.com/omniful/go_commons/worker/configs"
+	appinit "github.com/omniful/ims_rohit/init"
+	"github.com/omniful/ims_rohit/router"
 	"github.com/omniful/ims_rohit/workers"
 )
 
@@ -68,7 +68,7 @@ func main() {
 
 	flag.Parse()
 
-	server := http.InitializeServer(config.GetString(ctx, "server.port"),
+	server := http.InitializeServer(":8090",
 		35*time.Second,
 		35*time.Second,
 		70*time.Second,
@@ -92,7 +92,9 @@ func main() {
 
 func runHttpServer(ctx context.Context, server *http.Server) {
 	// Initialize middlewares and routes
-	router.Initialize(ctx, server)
+	engine := router.SetupRouter()
+	// Since server embeds *gin.Engine, we can directly use the engine
+	*server.Engine = *engine
 
 	log.Infof("Starting server on port" + config.GetString(ctx, "server.port"))
 

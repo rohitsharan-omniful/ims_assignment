@@ -1,0 +1,126 @@
+# Logging
+log:
+  format: json        # options: json, text
+  level: info         # options: debug, info, warn, error
+
+# Metadata
+service:
+  name: ims-service
+
+# Application
+app:
+  name: ims-service
+  env: development
+  port: 8090
+  shutdown_timeout: 30s
+
+# Server
+server:
+  port: 8090
+
+# Services
+wmsService:
+  baseUrl: "http://localhost:8081"
+  timeout: 30s
+
+tenantService:
+  baseUrl: "http://localhost:8082"
+  timeout: 30s
+
+fleetService:
+  baseUrl: "http://localhost:8083"
+  timeout: 30s
+
+
+posService:
+  baseUrl: "http://localhost:8084"
+  timeout: 30s
+
+transitWmsService:
+  baseUrl: "http://localhost:8085"
+  timeout: 30s
+
+# New Relic (optional)
+newrelic:
+  appName: ims-service
+  licence: ""
+  enabled: false
+  distributedTracer: false
+
+# AWS / LocalStack
+aws:
+  region: us-east-1
+  endpoint: http://localhost:4566
+  credentials:
+    access_key_id: test
+    secret_access_key: test
+
+# SQS
+sqs:
+  visibility_timeout: 30s
+  wait_time_seconds: 20
+  queues:
+    order: order-queue
+    payment: payment-queue
+
+# S3
+s3:
+  presign_expiry: 15m
+  buckets:
+    assets: asset-bucket
+    documents: document-bucket
+
+# Databases
+databases:
+  postgres:
+    host: localhost
+    port: 5432
+    user: postgres
+    password: postgres
+    dbname: oms_db
+    sslmode: disable
+    pool:
+      max_connections: 20
+      max_idle_connections: 5
+      max_lifetime: 1h
+  mongodb:
+    uri: mongodb://localhost:27017
+    database: oms_mongo
+    timeout: 10s
+    direct_connection: true
+
+# Redis
+redis:
+  clusterMode: false
+  hosts:
+    - localhost:6380
+  db: 0
+  password: ""
+  pool_size: 10
+  min_idle_conns: 2
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+# Cache
+cache:
+  default_ttl: 15m
+  prefixes:
+    user_sessions: "sess:"
+    product_catalog: "prod:"
+
+# Rate Limits
+rate_limits:
+  api: "100/1s"
+  auth: "10/1m"
+
+# Rate Limit Details
+rate_limit:
+  forgot_password:
+    limit: 5
+
+# Features
+features:
+  enable_async_processing: true
+  enable_cache: true
+  maintenance_mode: false

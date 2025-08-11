@@ -17,7 +17,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go application, statically linked for a smaller final image
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o /ims main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o /oms main.go
 
 # Start a new, much smaller image for the final container
 FROM alpine:latest
@@ -26,10 +26,10 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copy the compiled binary from the 'builder' stage
-COPY --from=builder /ims .
+COPY --from=builder /oms .
 
 # Expose the port the microservice will listen on
-EXPOSE 8080
+EXPOSE 8090
 
 # Command to run the application when the container starts
-CMD ["./ims"]
+CMD ["./oms"]

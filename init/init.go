@@ -2,6 +2,7 @@ package appinit
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/omniful/api-gateway/pkg/redis"
@@ -11,12 +12,14 @@ import (
 	"github.com/omniful/go_commons/newrelic"
 	oredis "github.com/omniful/go_commons/redis"
 	"github.com/omniful/ims_rohit/pkg/error"
+	"github.com/omniful/ims_rohit/pkg/pg"
 )
 
 func Initialize(ctx context.Context) {
 	initializeLog(ctx)
 	initializeNewrelic(ctx)
 	initializeRedis(ctx)
+	InitializePostgres(ctx)
 	validator.Set()
 	error.Initialize()
 }
@@ -57,4 +60,14 @@ func initializeRedis(ctx context.Context) {
 	})
 	log.InfofWithContext(ctx, "Initialized Redis Client")
 	redis.SetClient(r)
+}
+
+func InitializePostgres(ctx context.Context) {
+	db, err := pg.PgConnect(ctx)
+	if err != nil {
+		log.WithError(err).Panic("unable to initialise postgres")
+	}
+	pg.SetClient(db)
+	fmt.Println("Initialized Postgres Client")
+	log.InfofWithContext(ctx, "Initialized Postgres Client")
 }
